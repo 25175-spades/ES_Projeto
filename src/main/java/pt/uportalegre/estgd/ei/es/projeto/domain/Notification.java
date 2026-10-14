@@ -13,10 +13,10 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column
+    @Column (nullable = false)
     private String subject;
 
-    @Column
+    @Column (nullable = false)
     private String content;
 
     @ElementCollection
@@ -26,7 +26,7 @@ public class Notification {
     )
     private List<Recipient> recipients = new ArrayList<>();
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "sent_at")
@@ -41,6 +41,8 @@ public class Notification {
         this.content = content;
         this.recipients = recipients;
         this.createdAt = LocalDateTime.now();
+
+        this.recipients = new ArrayList<>(recipients);
     }
 
     public void markAsSent() {
@@ -60,7 +62,7 @@ public class Notification {
     }
 
     public List<Recipient> getRecipients() {
-        return recipients;
+        return List.copyOf(recipients);
     }
 
     public LocalDateTime getCreatedAt() {

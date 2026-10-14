@@ -1,12 +1,13 @@
 package pt.uportalegre.estgd.ei.es.projeto.domain;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
+@Embeddable
 public class Recipient {
 
-    @Column
+    @Column (nullable = false)
     private String address;
 
     protected Recipient() {
