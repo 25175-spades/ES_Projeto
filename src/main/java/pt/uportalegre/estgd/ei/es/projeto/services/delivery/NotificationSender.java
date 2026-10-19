@@ -1,4 +1,4 @@
-package pt.uportalegre.estgd.ei.es.projeto.delivery;
+package pt.uportalegre.estgd.ei.es.projeto.services.delivery;
 
 import pt.uportalegre.estgd.ei.es.projeto.domain.Notification;
 
