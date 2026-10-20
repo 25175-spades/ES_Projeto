@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,14 +33,24 @@ public class NotificationController {
         this.service = service;
     }
 
+    // Consulta as notificações e mostra em lista
     @GetMapping
     public String list(Model model) {
         model.addAttribute("notifications", service.findAll());
         return "notifications/list";
     }
 
+    // Apresenta o formulários
     @GetMapping("/new")
-    private String create(
+    public String showForm(Model model) {
+        model.addAttribute("form", new CreateNotificationForm());
+        return "notifications/create";
+    }
+
+    // Recebe a submissão do formulário
+    @PostMapping
+    public String create(
+            // Valida o formulário
             @Valid @ModelAttribute("form") CreateNotificationForm form,
             BindingResult result) {
 
@@ -49,11 +60,13 @@ public class NotificationController {
 
         List<Recipient> recipients = new ArrayList<>();
 
+        // Separa os endereços
         for (String value : form.getRecipients().split(";", -1)) {
 
             String address = value.trim();
 
             try {
+                // Valida a sintaxe do endereço
                 InternetAddress email = new InternetAddress(address, true);
                 email.validate();
 
@@ -62,6 +75,7 @@ public class NotificationController {
                 }
 
                 recipients.add(new Recipient(address));
+
             } catch (AddressException e) {
                 result.rejectValue("recipients", "invalid",
                         "Indica emails válidos separados por ponto e vírgula");
@@ -73,6 +87,7 @@ public class NotificationController {
         Notification notification;
 
         try {
+            // Cria e envia a notificação
             notification = service.createAndSend(
                     form.getSubject(), form.getContent(), recipients
             );
@@ -85,9 +100,11 @@ public class NotificationController {
             return "notifications/create";
         }
 
+        // Faz um pedido GET para o detalhe após a submissão
         return "redirect:/notifications/" + notification.getId();
     }
 
+    // Apresenta uma notificação específica
     @GetMapping("/{id}")
     public String detail(@PathVariable("id") Long id, Model model) {
         Notification notification;
@@ -103,6 +120,6 @@ public class NotificationController {
         }
 
         model.addAttribute("notification", notification);
-        return "notification/detail";
+        return "notifications/detail";
     }
 }
