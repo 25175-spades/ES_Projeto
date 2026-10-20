@@ -2,7 +2,6 @@ package pt.uportalegre.estgd.ei.es.projeto.controllers;
 
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailException;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 import pt.uportalegre.estgd.ei.es.projeto.domain.Notification;
 import pt.uportalegre.estgd.ei.es.projeto.domain.Recipient;
-import pt.uportalegre.estgd.ei.es.projeto.forms.CreateNotificationForm;
+import pt.uportalegre.estgd.ei.es.projeto.forms.NotificationForm;
 import pt.uportalegre.estgd.ei.es.projeto.services.NotificationService;
 
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class NotificationController {
     // Apresenta o formulários
     @GetMapping("/new")
     public String showForm(Model model) {
-        model.addAttribute("form", new CreateNotificationForm());
+        model.addAttribute("form", new NotificationForm());
         return "notifications/create";
     }
 
@@ -51,7 +50,7 @@ public class NotificationController {
     @PostMapping
     public String create(
             // Valida o formulário
-            @Valid @ModelAttribute("form") CreateNotificationForm form,
+            @Valid @ModelAttribute("form") NotificationForm form,
             BindingResult result) {
 
         if (result.hasErrors()) {

@@ -16,7 +16,7 @@ public class Notification {
     @Column (nullable = false)
     private String subject;
 
-    @Column (nullable = false)
+    @Column (nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @ElementCollection
@@ -39,7 +39,6 @@ public class Notification {
     public Notification(String subject, String content, List<Recipient> recipients) {
         this.subject = subject;
         this.content = content;
-        this.recipients = recipients;
         this.createdAt = LocalDateTime.now();
 
         this.recipients = new ArrayList<>(recipients);

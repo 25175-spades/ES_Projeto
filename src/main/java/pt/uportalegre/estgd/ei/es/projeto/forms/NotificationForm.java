@@ -3,7 +3,7 @@ package pt.uportalegre.estgd.ei.es.projeto.forms;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class CreateNotificationForm {
+public class NotificationForm {
     @NotBlank(message = "Indica pelo menos um destinatário")
     private String recipients;
 
