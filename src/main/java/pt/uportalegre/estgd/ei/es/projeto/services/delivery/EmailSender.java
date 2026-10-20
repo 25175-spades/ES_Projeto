@@ -15,7 +15,7 @@ public class EmailSender implements NotificationSender {
 
     public EmailSender(
             JavaMailSender mailSender,
-            @Value("${spring.username.mail}") String from) {
+            @Value("${spring.mail.username}") String from) {
 
         this.mailSender = mailSender;
         this.from = from;

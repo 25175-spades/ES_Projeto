@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detalhe da notificação</title>
+</head>
+
+<body>
+    <h1>Detalhe da notificação</h1>
+
+    <dl>
+        <dt>ID</dt>
+        <dd th:text="${notification.id}"></dd>
+
+        <dt>Assunto</dt>
+        <dd th:text="${notification.subject}"></dd>
+
+        <dt>Criada em</dt>
+        <dd th:text="${#temporals.format(
+                notification.createdAt, 'dd/MM/yyyy HH:mm')}">
+        </dd>
+
+        <dt>Envio registado em</dt>
+        <dd th:if="${notification.sentAt != null}"
+            th:text="${#temporals.format(
+                    notification.sentAt, 'dd/MM/yyyy HH:mm')}">
+        </dd>
+        <dd th:if="${notification.sentAt == null}">
+            Sem envio confirmado.
+        </dd>
+    </dl>
+
+    <h2>Destinatários</h2>
+    <ul>
+        <li th:each="recipient : ${notification.recipients}"
+            th:text="${recipient.address}">
+        </li>
+    </ul>
+
+    <h2>Conteúdo</h2>
+    <p style="white-space: pre-wrap"
+       th:text="${notification.content}"></p>
+
+    <p>
+        <a th:href="@{/notifications}">Voltar à listagem</a>
+    </p>
+</body>
+</html>

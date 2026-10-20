@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Notificações</title>
+</head>
+
+<body>
+    <h1>Notificações</h1>
+
+    <p>
+        <a th:href="@{/notifications/new}">Nova notificação</a>
+    </p>
+
+    <p th:if="${#lists.isEmpty(notifications)}">
+        Ainda não existem notificações.
+    </p>
+
+    <table th:unless="${#lists.isEmpty(notifications)}">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Assunto</th>
+                <th scope="col">Criada em</th>
+                <th scope="col">Envio</th>
+                <th scope="col">Detalhes</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="notification : ${notifications}">
+                <td th:text="${notification.id}"></td>
+                <td th:text="${notification.subject}"></td>
+                <td th:text="${#temporals.format(
+                            notification.createdAt, 'dd/MM/yyyy HH:mm')}">
+                </td>
+                <td th:text="${notification.sentAt != null
+                            ? 'Envio registado'
+                            : 'Sem envio confirmado'}">
+                </td>
+                <td>
+                    <a th:href="@{/notifications/{id}(
+                                id=${notification.id})}">
+                        Ver detalhe
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
