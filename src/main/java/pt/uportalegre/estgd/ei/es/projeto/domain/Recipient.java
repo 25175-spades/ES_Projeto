@@ -27,14 +27,17 @@ public class Recipient {
 
     @Override
     public boolean equals(Object object) {
+        // Verifica se é o próprio objeto
         if (this == object) {
             return true;
         }
 
+        // Verifica se é Recipient
         if (!(object instanceof Recipient recipient)) {
             return false;
         }
 
+        // Compara os endereços
         return Objects.equals(address, recipient.address);
     }
 

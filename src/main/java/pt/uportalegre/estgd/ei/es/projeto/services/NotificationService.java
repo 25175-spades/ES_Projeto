@@ -35,10 +35,12 @@ public class NotificationService {
         return repository.save(notification);
     }
 
+    // Devolve a lista completa de notificações existentes
     public List<Notification> findAll() {
         return repository.findAll();
     }
 
+    // Devolve uma notificação correspondente ao id
     public Notification findById(Long id) {
         return repository.findById(id).orElseThrow(()
                 -> new IllegalArgumentException("Notification not found: " + id)
