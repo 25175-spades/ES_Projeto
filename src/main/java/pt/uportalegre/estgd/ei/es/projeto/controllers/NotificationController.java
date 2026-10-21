@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 import pt.uportalegre.estgd.ei.es.projeto.domain.Notification;
 import pt.uportalegre.estgd.ei.es.projeto.domain.Recipient;
-import pt.uportalegre.estgd.ei.es.projeto.forms.NotificationForm;
+import pt.uportalegre.estgd.ei.es.projeto.forms.CreateNotificationForm;
 import pt.uportalegre.estgd.ei.es.projeto.services.NotificationService;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class NotificationController {
     // Apresenta o formulários
     @GetMapping("/new")
     public String showForm(Model model) {
-        model.addAttribute("form", new NotificationForm());
+        model.addAttribute("form", new CreateNotificationForm());
         return "notifications/create";
     }
 
@@ -50,7 +50,7 @@ public class NotificationController {
     @PostMapping
     public String create(
             // Valida o formulário
-            @Valid @ModelAttribute("form") NotificationForm form,
+            @Valid @ModelAttribute("form") CreateNotificationForm form,
             BindingResult result) {
 
         if (result.hasErrors()) {
