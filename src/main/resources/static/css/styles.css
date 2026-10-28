@@ -1,0 +1,193 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 24px;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1.6;
+    color: #243042;
+    background-color: #f5f6f8;
+}
+
+h1 {
+    margin-bottom: 24px;
+    font-size: 32px;
+}
+
+h2 {
+    margin-top: 28px;
+    font-size: 24px;
+}
+
+a {
+    color: #2459a6;
+    text-underline-offset: 3px;
+}
+
+a:hover {
+    color: #173c73;
+}
+
+/* Formulário */
+form {
+    padding: 28px;
+    background-color: #fff;
+    border: 1px solid #d8dde5;
+    border-radius: 8px;
+}
+
+form > div {
+    margin-bottom: 22px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+small {
+    display: block;
+    margin-bottom: 8px;
+    color: #526174;
+    font-size: 15px;
+}
+
+input,
+textarea {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #8b97a7;
+    border-radius: 5px;
+    font: inherit;
+    color: inherit;
+    background-color: #fff;
+}
+
+textarea {
+    min-height: 200px;
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #2459a6;
+}
+
+/* Evita espaço extra dos <br> existentes no formulário */
+form br {
+    display: none;
+}
+
+button {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 5px;
+    font: inherit;
+    font-weight: bold;
+    color: #fff;
+    background-color: #2459a6;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #173c73;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid #2459a6;
+    outline-offset: 3px;
+}
+
+/* Mensagens de validação */
+form p {
+    margin: 8px 0 0;
+    color: #b42318;
+    font-size: 16px;
+}
+
+/* Listagem */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+}
+
+th,
+td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #d8dde5;
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+
+th {
+    background-color: #e7ecf3;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+/* Detalhe */
+dl {
+    padding: 24px;
+    border: 1px solid #d8dde5;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+dt {
+    margin-top: 16px;
+    font-weight: bold;
+}
+
+dt:first-child {
+    margin-top: 0;
+}
+
+dd {
+    margin: 4px 0 0;
+    overflow-wrap: anywhere;
+}
+
+li {
+    margin-bottom: 6px;
+}
+
+p {
+    overflow-wrap: anywhere;
+}
+
+/* Ecrãs pequenos */
+@media (max-width: 700px) {
+    body {
+        margin: 20px auto;
+        padding: 0 16px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    form {
+        padding: 20px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    button {
+        width: 100%;
+    }
+}
