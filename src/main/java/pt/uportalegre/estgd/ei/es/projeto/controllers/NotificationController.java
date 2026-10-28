@@ -39,7 +39,7 @@ public class NotificationController {
         return "notifications/list";
     }
 
-    // Apresenta o formulários
+    // Apresenta o formulário para criar uma notificação
     @GetMapping("/new")
     public String showForm(Model model) {
         model.addAttribute("form", new CreateNotificationForm());
@@ -57,38 +57,12 @@ public class NotificationController {
             return "notifications/create";
         }
 
-        List<Recipient> recipients = new ArrayList<>();
-
-        // Separa os endereços
-        for (String value : form.getRecipients().split(";", -1)) {
-
-            String address = value.trim();
-
-            try {
-                // Valida a sintaxe do endereço
-                InternetAddress email = new InternetAddress(address, true);
-                email.validate();
-
-                if (address.isBlank() || !address.contains("@") || !address.equals(email.getAddress())) {
-                    throw new AddressException("Invalid email address");
-                }
-
-                recipients.add(new Recipient(address));
-
-            } catch (AddressException e) {
-                result.rejectValue("recipients", "invalid",
-                        "Indica emails válidos separados por ponto e vírgula");
-
-                return "notifications/create";
-            }
-        }
-
         Notification notification;
 
         try {
             // Cria e envia a notificação
             notification = service.createAndSend(
-                    form.getSubject(), form.getContent(), recipients
+                    form.getSubject(), form.getContent(), form.getRecipientList()
             );
         } catch (MailException e) {
             result.reject(
