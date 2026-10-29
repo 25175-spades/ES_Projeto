@@ -21,6 +21,13 @@
         <dt>Assunto</dt>
         <dd th:text="${notification.subject}"></dd>
 
+        <dt>Estado</dt>
+        <dd th:switch="${notification.status.name()}">
+            <span th:case="'PENDING'">Pendente</span>
+            <span th:case="'SENT'">Enviada</span>
+            <span th:case="'FAILED'">Falhou</span>
+        </dd>
+
         <dt>Criada em</dt>
         <dd th:text="${#temporals.format(
                 notification.createdAt, 'dd/MM/yyyy HH:mm')}">
@@ -32,8 +39,11 @@
                     notification.sentAt, 'dd/MM/yyyy HH:mm')}">
         </dd>
         <dd th:if="${notification.sentAt == null}">
-            Sem envio confirmado.
+            Sem envio confirmado
         </dd>
+
+        <!--<dt>Tentativas de envio</dt>
+        <dd th:text="${notification.attemptCount}"></dd>-->
     </dl>
 
     <h2>Destinatários</h2>

@@ -32,6 +32,10 @@ public class Notification {
     @Column(name = "sent_at")
     private LocalDateTime sentAt;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private NotificationStatus status = NotificationStatus.PENDING;
+
     protected Notification() {
 
     }
@@ -45,7 +49,12 @@ public class Notification {
     }
 
     public void markAsSent() {
+        this.status = NotificationStatus.SENT;
         this.sentAt = LocalDateTime.now();
+    }
+
+    public void markAsFailed() {
+        this.status = NotificationStatus.FAILED;
     }
 
     public long getId() {
@@ -70,5 +79,9 @@ public class Notification {
 
     public LocalDateTime getSentAt() {
         return sentAt;
+    }
+
+    public NotificationStatus getStatus() {
+        return status;
     }
 }

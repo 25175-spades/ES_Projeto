@@ -3,6 +3,7 @@ package pt.uportalegre.estgd.ei.es.projeto.controllers;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Controller;
@@ -26,11 +27,8 @@ import java.util.List;
 @RequestMapping("/notifications")
 public class NotificationController {
 
-    private final NotificationService service;
-
-    public NotificationController(NotificationService service) {
-        this.service = service;
-    }
+    @Autowired
+    private NotificationService service;
 
     // Consulta as notificações e mostra em lista
     @GetMapping
@@ -59,19 +57,10 @@ public class NotificationController {
 
         Notification notification;
 
-        try {
-            // Cria e envia a notificação
-            notification = service.createAndSend(
-                    form.getSubject(), form.getContent(), form.getRecipientList()
-            );
-        } catch (MailException e) {
-            result.reject(
-                    "sendFailed",
-                    "A notificação foi registada, mas o envio falhou. " +
-                            "Consulta a listagem antes de submeter novamente.");
-
-            return "notifications/create";
-        }
+        // Cria e envia a notificação
+        notification = service.createAndSend(
+                form.getSubject(), form.getContent(), form.getRecipientList()
+        );
 
         // Faz um pedido GET para o detalhe após a submissão
         return "redirect:/notifications/" + notification.getId();

@@ -1,5 +1,7 @@
 package pt.uportalegre.estgd.ei.es.projeto.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import pt.uportalegre.estgd.ei.es.projeto.domain.Notification;
 import pt.uportalegre.estgd.ei.es.projeto.domain.Recipient;
@@ -11,13 +13,11 @@ import java.util.List;
 @Service
 public class NotificationService {
 
-    private final NotificationRepository repository;
-    private final NotificationSender sender;
+    @Autowired
+    private NotificationRepository repository;
 
-    public NotificationService(NotificationRepository repository, NotificationSender sender) {
-        this.repository = repository;
-        this.sender = sender;
-    }
+    @Autowired
+    private NotificationSender sender;
 
     public Notification createAndSend(String subject, String content, List<Recipient> recipients) {
 
@@ -27,8 +27,16 @@ public class NotificationService {
         // Regista na db
         notification = repository.save(notification);
 
-        // Chama o envio
-        sender.send(notification);
+
+        try {
+            // Chama o envio
+            sender.send(notification);
+        }
+        catch (MailException e) {
+            notification.markAsFailed();
+
+            throw e;
+        }
 
         // Guarda a data de envio
         notification.markAsSent();
