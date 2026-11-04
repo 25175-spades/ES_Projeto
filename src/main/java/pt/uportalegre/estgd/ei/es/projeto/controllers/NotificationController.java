@@ -1,11 +1,8 @@
 package pt.uportalegre.estgd.ei.es.projeto.controllers;
 
-import jakarta.mail.internet.AddressException;
-import jakarta.mail.internet.InternetAddress;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.MailException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,12 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 import pt.uportalegre.estgd.ei.es.projeto.domain.Notification;
-import pt.uportalegre.estgd.ei.es.projeto.domain.Recipient;
 import pt.uportalegre.estgd.ei.es.projeto.forms.CreateNotificationForm;
 import pt.uportalegre.estgd.ei.es.projeto.services.NotificationService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping("/notifications")
@@ -55,11 +48,12 @@ public class NotificationController {
             return "notifications/create";
         }
 
-        Notification notification;
-
         // Cria e envia a notificação
-        notification = service.createAndSend(
-                form.getSubject(), form.getContent(), form.getRecipientList()
+        Notification notification
+                = service.create(
+                        form.getSubject(),
+                        form.getContent(),
+                        form.getRecipientList()
         );
 
         // Faz um pedido GET para o detalhe após a submissão
