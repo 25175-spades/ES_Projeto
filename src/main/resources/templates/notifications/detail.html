@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt" xmlns:th="http://www.thymeleaf.org">
 
@@ -12,53 +11,108 @@
 </head>
 
 <body>
-    <h1>Detalhe da notificação</h1>
+<h1>Detalhe da notificação</h1>
 
-    <dl>
-        <dt>ID</dt>
-        <dd th:text="${notification.id}"></dd>
+<main class="notification-layout">
 
-        <dt>Assunto</dt>
-        <dd th:text="${notification.subject}"></dd>
+    <section class="notification-card" aria-labelledby="details-title">
+        <h2 id="details-title">Detalhes</h2>
 
-        <dt>Estado</dt>
-        <dd th:switch="${notification.status.name()}">
-            <span th:case="'PENDING'">Pendente</span>
-            <span th:case="'SENT'">Enviada</span>
-            <span th:case="'FAILED'">Falhou</span>
-        </dd>
+        <dl>
+            <dt>ID</dt>
+            <dd th:text="${notification.id}"></dd>
 
-        <dt>Criada em</dt>
-        <dd th:text="${#temporals.format(
-                notification.createdAt, 'dd/MM/yyyy HH:mm')}">
-        </dd>
+            <dt>Assunto</dt>
+            <dd th:text="${notification.subject}"></dd>
 
-        <dt>Envio registado em</dt>
-        <dd th:if="${notification.sentAt != null}"
-            th:text="${#temporals.format(
-                    notification.sentAt, 'dd/MM/yyyy HH:mm')}">
-        </dd>
-        <dd th:if="${notification.sentAt == null}">
-            Sem envio confirmado
-        </dd>
+            <dt>Estado</dt>
+            <dd th:switch="${notification.status != null
+                        ? notification.status.name() : 'UNKNOWN'}">
+                <span th:case="'PENDING'">Pendente</span>
+                <span th:case="'SENT'">Enviada</span>
+                <span th:case="'FAILED'">Falhou</span>
+                <span th:case="*">Desconhecido</span>
+            </dd>
 
-        <!--<dt>Tentativas de envio</dt>
-        <dd th:text="${notification.attemptCount}"></dd>-->
-    </dl>
+            <dt>Criada em</dt>
+            <dd th:text="${#temporals.format(
+                        notification.createdAt, 'dd/MM/yyyy HH:mm')}">
+            </dd>
 
-    <h2>Destinatários</h2>
-    <ul>
-        <li th:each="recipient : ${notification.recipients}"
-            th:text="${recipient.address}">
-        </li>
-    </ul>
+            <dt>Envio registado em</dt>
+            <dd th:if="${notification.sentAt != null}"
+                th:text="${#temporals.format(
+                        notification.sentAt, 'dd/MM/yyyy HH:mm')}">
+            </dd>
+            <dd th:unless="${notification.sentAt != null}">
+                Sem envio confirmado.
+            </dd>
+        </dl>
 
-    <h2>Conteúdo</h2>
-    <p style="white-space: pre-wrap"
-       th:text="${notification.content}"></p>
+        <h2>Destinatários</h2>
+        <ul>
+            <li th:each="recipient : ${notification.recipients}"
+                th:text="${recipient.address}">
+            </li>
+        </ul>
 
-    <p>
-        <a th:href="@{/notifications}">Voltar à listagem</a>
-    </p>
+        <h2>Conteúdo</h2>
+        <p style="white-space: pre-wrap"
+           th:text="${notification.content}"></p>
+    </section>
+
+    <section class="notification-card" aria-labelledby="history-title" >
+        <h2 id="history-title">Histórico de Tentativas de Envio</h2>
+
+        <p th:unless="${#lists.isEmpty(attempts)}">
+            Total de tentativas:
+            <strong th:text="${#lists.size(attempts)}">0</strong>
+        </p>
+
+        <p th:if="${#lists.isEmpty(attempts)}">
+            Ainda não foram registadas tentativas de envio.
+        </p>
+
+
+        <table th:unless="${#lists.isEmpty(attempts)}">
+            <thead>
+            <tr>
+                <th scope="col">Tentativa</th>
+                <th scope="col">Data</th>
+                <th scope="col">Resultado</th>
+                <th scope="col">Informação do erro</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="attempt, iteration : ${attempts}">
+                <td th:text="${iteration.count}"></td>
+
+                <td th:text="${#temporals.format(
+                                attempt.attemptedAt, 'dd/MM/yyyy HH:mm:ss')}">
+                </td>
+
+                <td th:text="${attempt.successful ? 'Sucesso' : 'Falhou'}"></td>
+
+                <td>
+                    <span th:if="${attempt.successful}">—</span>
+
+                    <span th:unless="${attempt.successful}"
+                          th:text="${#strings.isEmpty(attempt.errorMessage)
+                                      ? 'Sem informação adicional'
+                                      : attempt.errorMessage}">
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+            </table>
+
+    </section>
+
+</main>
+
+<p>
+    <a th:href="@{/notifications}">Voltar à listagem</a>
+</p>
 </body>
 </html>

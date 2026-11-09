@@ -21,6 +21,11 @@ public class NotificationService {
     @Autowired
     private DeliveryAttemptRepository attemptRepository;
 
+    public List<DeliveryAttempt> findAttempts(Long notificationId) {
+        return attemptRepository
+                .findByNotificationIdOrderByAttemptedAtAscIdAsc(notificationId);
+    }
+
     @Autowired
     private NotificationSender sender;
 

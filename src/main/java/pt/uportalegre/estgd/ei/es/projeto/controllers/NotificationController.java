@@ -76,6 +76,8 @@ public class NotificationController {
         }
 
         model.addAttribute("notification", notification);
+        model.addAttribute("attempts", service.findAttempts(id));
+
         return "notifications/detail";
     }
 }

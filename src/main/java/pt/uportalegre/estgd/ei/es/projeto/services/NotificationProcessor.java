@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 import pt.uportalegre.estgd.ei.es.projeto.domain.DeliveryAttempt;
 import pt.uportalegre.estgd.ei.es.projeto.domain.Notification;
 import pt.uportalegre.estgd.ei.es.projeto.domain.NotificationStatus;
@@ -15,6 +16,7 @@ import pt.uportalegre.estgd.ei.es.projeto.services.delivery.NotificationSender;
 
 import java.util.List;
 
+@Service
 public class NotificationProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationProcessor.class);
