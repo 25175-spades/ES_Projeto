@@ -20,7 +20,7 @@ public class DeliveryAttempt {
     private LocalDateTime attemptedAt;
 
     @Column(nullable = false)
-    private Boolean successful;
+    private boolean successful;
 
     @Column(name = "error_message", columnDefinition = "TEXT")
     private String errorMessage;
@@ -49,7 +49,7 @@ public class DeliveryAttempt {
         return attemptedAt;
     }
 
-    public Boolean isSuccessful() {
+    public boolean isSuccessful() {
         return successful;
     }
 

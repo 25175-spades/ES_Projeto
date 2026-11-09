@@ -1,3 +1,4 @@
+/* Base */
 * {
     box-sizing: border-box;
 }
@@ -14,13 +15,19 @@ body {
 }
 
 h1 {
-    margin-bottom: 24px;
+    margin: 0 0 24px;
     font-size: 32px;
 }
 
 h2 {
-    margin-top: 28px;
+    margin: 28px 0 16px;
     font-size: 24px;
+}
+
+p,
+li,
+dd {
+    overflow-wrap: anywhere;
 }
 
 a {
@@ -34,14 +41,19 @@ a:hover {
 
 /* Formulário */
 form {
+    max-width: 900px;
     padding: 28px;
-    background-color: #fff;
     border: 1px solid #d8dde5;
     border-radius: 8px;
+    background-color: #fff;
 }
 
 form > div {
     margin-bottom: 22px;
+}
+
+form br {
+    display: none;
 }
 
 label {
@@ -74,16 +86,6 @@ textarea {
     resize: vertical;
 }
 
-input:focus,
-textarea:focus {
-    border-color: #2459a6;
-}
-
-/* Evita espaço extra dos <br> existentes no formulário */
-form br {
-    display: none;
-}
-
 button {
     padding: 12px 22px;
     border: none;
@@ -114,7 +116,7 @@ form p {
     font-size: 16px;
 }
 
-/* Listagem */
+/* Tabelas */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -123,9 +125,10 @@ table {
 
 th,
 td {
-    padding: 14px 16px;
+    padding: 12px;
     border-bottom: 1px solid #d8dde5;
     text-align: left;
+    vertical-align: top;
     overflow-wrap: anywhere;
 }
 
@@ -137,12 +140,32 @@ tbody tr:nth-child(even) {
     background-color: #f8fafc;
 }
 
-/* Detalhe */
-dl {
+/* Detalhes à esquerda e histórico à direita */
+.notification-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+}
+
+.notification-layout > section,
+.notification-layout > aside {
+    min-width: 0;
+    width: 100%;
+    margin: 0;
     padding: 24px;
     border: 1px solid #d8dde5;
     border-radius: 8px;
     background-color: #fff;
+    overflow-x: auto;
+}
+
+.notification-card > h2:first-child {
+    margin-top: 0;
+}
+
+.notification-card dl {
+    margin: 0;
+    padding: 0;
 }
 
 dt {
@@ -156,21 +179,38 @@ dt:first-child {
 
 dd {
     margin: 4px 0 0;
-    overflow-wrap: anywhere;
 }
 
 li {
     margin-bottom: 6px;
 }
 
-p {
-    overflow-wrap: anywhere;
+/* Distribui o espaço pelas colunas do histórico */
+aside.notification-card table {
+    table-layout: fixed;
+    font-size: 16px;
 }
 
-/* Ecrãs pequenos */
-@media (max-width: 700px) {
+aside.notification-card th:nth-child(1) {
+    width: 17%;
+}
+
+aside.notification-card th:nth-child(2) {
+    width: 25%;
+}
+
+aside.notification-card th:nth-child(3) {
+    width: 18%;
+}
+
+aside.notification-card th:nth-child(4) {
+    width: 40%;
+}
+
+/* Em ecrãs pequenos, o histórico passa para baixo */
+@media (max-width: 800px) {
     body {
-        margin: 20px auto;
+        margin: 24px auto;
         padding: 0 16px;
     }
 
@@ -178,13 +218,14 @@ p {
         font-size: 28px;
     }
 
-    form {
-        padding: 20px;
+    .notification-layout {
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    table {
-        display: block;
-        overflow-x: auto;
+    .notification-layout > section,
+    .notification-layout > aside,
+    form {
+        padding: 20px;
     }
 
     button {
