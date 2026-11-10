@@ -20,11 +20,6 @@ public class NotificationService {
     @Autowired
     private DeliveryAttemptRepository attemptRepository;
 
-    public List<DeliveryAttempt> findAttempts(Long notificationId) {
-        return attemptRepository
-                .findByNotificationIdOrderByAttemptedAtAscIdAsc(notificationId);
-    }
-
     public Notification create(String subject, String content, List<Recipient> recipients) {
 
         // Cria a notificação
@@ -61,5 +56,11 @@ public class NotificationService {
         return repository.findById(id).orElseThrow(()
                 -> new IllegalArgumentException("Notification not found: " + id)
         );
+    }
+
+    // Devolve o histórico de tentativas
+    public List<DeliveryAttempt> findAttempts(Long notificationId) {
+        return attemptRepository
+                .findByNotificationIdOrderByAttemptedAtAscIdAsc(notificationId);
     }
 }
