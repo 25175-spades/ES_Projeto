@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
+import org.springframework.mail.MailSendException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pt.uportalegre.estgd.ei.es.projeto.domain.DeliveryAttempt;
@@ -20,6 +21,9 @@ import java.util.List;
 public class NotificationProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationProcessor.class);
+
+    @Autowired
+    private NotificationService service;
 
     @Autowired
     private NotificationRepository repository;
@@ -40,15 +44,14 @@ public class NotificationProcessor {
 
         List<Notification> notifications =
                 repository.findByStatusIn(
-                        List.of(NotificationStatus.PENDING,
-                                NotificationStatus.FAILED)
+                        List.of(NotificationStatus.PENDING)
                 );
 
         for (Notification notification : notifications) {
             try {
                 process(notification);
             } catch (RuntimeException e) {
-                // Um erro numa notificação não interrompe as restantes.
+                // Um erro numa notificação não interrompe as restantes
                 logger.error(
                         "Erro ao processar a notificação {}",
                         notification.getId(),
@@ -71,28 +74,14 @@ public class NotificationProcessor {
 
         try {
             sender.send(notification);
-        }
-        catch (MailException e) {
-            attemptRepository.save(
-                    new DeliveryAttempt(
-                            notification,
-                            false,
-                            e.getMessage()
-                    )
-            );
+        } catch (MailException e) {
+            boolean retry = e instanceof MailSendException
+                    && attemptCount + 1 < maxAttempts;
 
-            notification.markAsFailed();
-            repository.save(notification);
-
-            // Termina esta tentativa
+            service.recordAttempt(notification, false, e.getMessage(), retry);
             return;
         }
 
-        attemptRepository.save(
-                new DeliveryAttempt(notification, true, null)
-        );
-
-        notification.markAsSent();
-        repository.save(notification);
+        service.recordAttempt(notification, true, null, false);
     }
 }

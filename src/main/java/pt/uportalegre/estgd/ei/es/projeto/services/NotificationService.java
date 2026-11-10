@@ -3,6 +3,7 @@ package pt.uportalegre.estgd.ei.es.projeto.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pt.uportalegre.estgd.ei.es.projeto.domain.DeliveryAttempt;
 import pt.uportalegre.estgd.ei.es.projeto.domain.Notification;
 import pt.uportalegre.estgd.ei.es.projeto.domain.Recipient;
@@ -26,56 +27,38 @@ public class NotificationService {
                 .findByNotificationIdOrderByAttemptedAtAscIdAsc(notificationId);
     }
 
-    @Autowired
-    private NotificationSender sender;
-
     public Notification create(String subject, String content, List<Recipient> recipients) {
 
         // Cria a notificação
         Notification notification = new Notification(subject, content, recipients);
 
         // Regista na db
-        notification = repository.save(notification);
-
-        return send(notification);
-    }
-
-    public Notification send(Notification notification) {
-
-        try {
-            // Chama o envio
-            sender.send(notification);
-        }
-        catch (MailException e) {
-
-            attemptRepository.save(
-                    new DeliveryAttempt(
-                            notification,
-                            false,
-                            e.getMessage()
-                    )
-            );
-            notification.markAsFailed();
-            repository.save(notification);
-
-            throw e;
-        }
-
-        attemptRepository.save(
-                new DeliveryAttempt(notification, true, null)
-        );
-
-        // Guarda a data de envio
-        notification.markAsSent();
         return repository.save(notification);
     }
 
-    // Devolve a lista completa de notificações existentes
+    @Transactional
+    public void recordAttempt(Notification notification, boolean successful, String errorMessage, boolean retry) {
+
+        attemptRepository.save(
+                new DeliveryAttempt(notification, successful, errorMessage)
+        );
+
+        if (successful) {
+            // Guarda a data de envio
+            notification.markAsSent();
+        } else if (!retry) {
+            notification.markAsFailed();
+        }
+
+        repository.save(notification);
+    }
+
+    // Devolve a lista de notificações existentes
     public List<Notification> findAll() {
         return repository.findAll();
     }
 
-    // Devolve uma notificação correspondente ao id
+    // Devolve uma notificação correspondente a um id
     public Notification findById(Long id) {
         return repository.findById(id).orElseThrow(()
                 -> new IllegalArgumentException("Notification not found: " + id)
