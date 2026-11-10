@@ -26,12 +26,6 @@ public class NotificationProcessor {
     private NotificationService service;
 
     @Autowired
-    private NotificationRepository repository;
-
-    @Autowired
-    private DeliveryAttemptRepository attemptRepository;
-
-    @Autowired
     private NotificationSender sender;
 
     @Value("${notifications.max-attempts:3}")
@@ -42,12 +36,9 @@ public class NotificationProcessor {
     )
     public void processNotifications() {
 
-        List<Notification> notifications =
-                repository.findByStatusIn(
-                        List.of(NotificationStatus.PENDING)
-                );
+        List<Notification> pendingNotifications = service.findPendingNotifications();
 
-        for (Notification notification : notifications) {
+        for (Notification notification : pendingNotifications) {
             try {
                 process(notification);
             } catch (RuntimeException e) {
@@ -61,10 +52,7 @@ public class NotificationProcessor {
 
     private void process(Notification notification) {
 
-        long attemptCount =
-                attemptRepository.countByNotificationId(
-                        notification.getId()
-                );
+        long attemptCount = service.countAttempts(notification.getId());
 
         if (attemptCount >= maxAttempts) {
             return;

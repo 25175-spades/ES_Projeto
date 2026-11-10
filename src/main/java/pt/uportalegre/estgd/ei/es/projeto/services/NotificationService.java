@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pt.uportalegre.estgd.ei.es.projeto.domain.DeliveryAttempt;
 import pt.uportalegre.estgd.ei.es.projeto.domain.Notification;
+import pt.uportalegre.estgd.ei.es.projeto.domain.NotificationStatus;
 import pt.uportalegre.estgd.ei.es.projeto.domain.Recipient;
 import pt.uportalegre.estgd.ei.es.projeto.repositories.DeliveryAttemptRepository;
 import pt.uportalegre.estgd.ei.es.projeto.repositories.NotificationRepository;
@@ -58,9 +59,19 @@ public class NotificationService {
         );
     }
 
-    // Devolve o histórico de tentativas
+    // Devolve uma lista das notificações pendentes
+    public List<Notification> findPendingNotifications() {
+        return repository.findByStatusIn(List.of(NotificationStatus.PENDING));
+    }
+
+    // Devolve o histórico de tentativas de uma notificação
     public List<DeliveryAttempt> findAttempts(Long notificationId) {
         return attemptRepository
                 .findByNotificationIdOrderByAttemptedAtAscIdAsc(notificationId);
+    }
+
+    // Devolve a contagem de tentativas de uma notificação
+    public long countAttempts(Long notificationId) {
+        return attemptRepository.countByNotificationId(notificationId);
     }
 }
