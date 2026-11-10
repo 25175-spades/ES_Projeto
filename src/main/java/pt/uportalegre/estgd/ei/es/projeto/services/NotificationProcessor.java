@@ -53,9 +53,7 @@ public class NotificationProcessor {
             } catch (RuntimeException e) {
                 // Um erro numa notificação não interrompe as restantes
                 logger.error(
-                        "Erro ao processar a notificação {}",
-                        notification.getId(),
-                        e
+                        "Erro ao processar a notificação {}", notification.getId(), e
                 );
             }
         }

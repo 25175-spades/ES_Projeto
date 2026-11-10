@@ -1,7 +1,6 @@
 package pt.uportalegre.estgd.ei.es.projeto.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pt.uportalegre.estgd.ei.es.projeto.domain.DeliveryAttempt;
@@ -9,7 +8,6 @@ import pt.uportalegre.estgd.ei.es.projeto.domain.Notification;
 import pt.uportalegre.estgd.ei.es.projeto.domain.Recipient;
 import pt.uportalegre.estgd.ei.es.projeto.repositories.DeliveryAttemptRepository;
 import pt.uportalegre.estgd.ei.es.projeto.repositories.NotificationRepository;
-import pt.uportalegre.estgd.ei.es.projeto.services.delivery.NotificationSender;
 
 import java.util.List;
 

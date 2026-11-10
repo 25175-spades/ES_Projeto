@@ -1,6 +1,7 @@
 package pt.uportalegre.estgd.ei.es.projeto.services.delivery;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import pt.uportalegre.estgd.ei.es.projeto.domain.Notification;
 import pt.uportalegre.estgd.ei.es.projeto.domain.Recipient;
 
 @Service
+@Profile("!simulate-mail")
 public class EmailSender implements NotificationSender {
 
     private final JavaMailSender mailSender;
