@@ -27,9 +27,7 @@ public class NotificationProcessor {
     @Value("${notifications.max-attempts:3}")
     private int maxAttempts;
 
-    @Scheduled(
-            fixedDelayString = "${notifications.processing-delay-ms:10000}"
-    )
+    @Scheduled(fixedDelayString = "${notifications.processing-delay-ms:10000}")
     public void processNotifications() {
 
         List<Notification> pendingNotifications = service.findPendingNotifications();
